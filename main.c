@@ -6,10 +6,22 @@
 #include <windows.h>
 
 
+void displayColumnSummary(int);
+void calcStDev(int);
+void handleMissingValues(int);
+int variableType(int);
+
+
+
+
 int main() {
 
-    char path[20];
-    char val[30];
+    char path[200];
+    char data[100][100];
+    int rowNum, colNum, nullNum;
+    int r,c=0;
+
+
 
     printf("---------Command Line Data Cleaner---------");
 
@@ -19,20 +31,47 @@ int main() {
     gets(path);
 
     //open the file from the file path
-    FILE * fptr;
-    fptr = fopen (path,"w+");
-
+    FILE *fptr ;
+    
+    fptr = fopen(path,"r");
+ 
     if(fptr == NULL){
-        printf(“File type invalid!”);
-        exit(1);
+        printf("Invalid File Type! Cannot read the file .");
+        exit(0);
     }
-    else{
+
+    char row[1500];
+
+
         
-    }
+        while(fgets(row, 500, fptr)!=NULL){
+            char *token = strtok(row, ",");
+            while(token!=NULL){
+                data[r][c] = val;
+                c++;
+                token = strtok(NULL, ",");
+            }
+            r++;
+        }
+
 
 
     fclose(fptr);
-    printf("\n ---------Chalyo---------");
-    
     return 0;
+}
+
+void displayColumnSummary(int colIndex){
+
+}
+
+void calcStDev(int colIndex){
+
+}
+
+void handleMissingValues(int colIndex){
+
+}
+
+int variableType(int colIndex){
+
 }
