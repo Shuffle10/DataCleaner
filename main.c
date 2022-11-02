@@ -17,9 +17,11 @@ int variableType(int);
 int main() {
 
     char path[200];
-    char data[100][100];
-    int rowNum, colNum, nullNum;
-    int r,c=0;
+    int data[100][100];
+    char *token;
+    int val, rowNum, colNum, nullNum;
+    int r=0;
+    int c=0;
 
 
 
@@ -32,7 +34,6 @@ int main() {
 
     //open the file from the file path
     FILE *fptr ;
-    
     fptr = fopen(path,"r");
  
     if(fptr == NULL){
@@ -43,16 +44,36 @@ int main() {
     char row[1500];
 
 
+
+        while (!feof(fptr))
+    {
+        fgets(row, 1500, fptr);
+
+        token = strtok(row, ",");
+        // printf("%s\n",token);
         
-        while(fgets(row, 500, fptr)!=NULL){
-            char *token = strtok(row, ",");
-            while(token!=NULL){
-                data[r][c] = val;
-                c++;
-                token = strtok(NULL, ",");
-            }
-            r++;
+        while(token != NULL)
+        {
+            val = atoi(token);
+            // printf("%d\n",val);
+            data[r][c] = val;
+            // printf("colums:%d",c);
+            // printf("rows:%d\n",r);
+            c++;
+            token = strtok(NULL, ",");
         }
+        c=0;
+        r++;        
+    }
+
+    // printf("%d\n", data[1][0]);
+
+    for(int i=0; i<100; i++){
+        for(int j=0; j<15; j++){
+            printf("%d\t", data[i][j]);
+    }
+    printf("\n");
+    }
 
 
 
