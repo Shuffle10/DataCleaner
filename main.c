@@ -6,13 +6,11 @@
 #include "strsep.h"
 
 
-void displayColumnSummary(int col[100][100]);
-int nullFinder(int col[100][100], int colNum);
+void replaceEmptyFields(int col[100][100]);
+int nullFinder(int indexes[100], int col[100][100], int colNum);
 void handleMissingValues(int col[100][100], int colNum, int avg);
-void calcStDev(int);
-int variableType(int);
-
-
+void sortValues(int col[100]);
+int calcMedian(int col[100], int n);
 
 
 int main() {
@@ -70,25 +68,29 @@ int main() {
     // printf("\n");
     // }
 
-displayColumnSummary(data);
-
-
-
-
-
-
+replaceEmptyFields(data);
+for(int i=0; i<100; i++){
+        for(int j=0; j<15; j++){
+            printf("%d\t", data[i][j]);
+    }
+    printf("\n");
+}
 
 //close the file
     fclose(fptr);
     return 0;
 }
 
-void displayColumnSummary(int col[100][100]){
+void replaceEmptyFields(int col[100][100]){
     int i,j;
+    int z=0;
     int sum=0;
     int avg=0;
+    int median;
     char opt;
+    int indexes[100]={};
     int indexCount;
+    int colcpy[100];
 
     printf("Please Eenter a method to fil the missing values:\nA.) Mean\nB.) Median\n\n =>");
     scanf("%c", &opt);
@@ -97,62 +99,88 @@ void displayColumnSummary(int col[100][100]){
 
     case 'A':
         for(i=0; i<15; i++){
-        nullFinder(col,i);
+        indexCount = nullFinder(indexes, col,i);
             for(j=0; j<100; j++){
                 sum = sum + col[j][i];
             }
+        
         avg = sum / (j-indexCount);
-        printf("The average of colum %d is %d\n\n", i+1, avg);
         handleMissingValues(col, i, avg);
         sum=0;
         avg=0;
         }
-            for(int i=0; i<100; i++){
-        for(int j=0; j<15; j++){
-            printf("%d\t", col[i][j]);
-    }
-    printf("\n");
-    }
         break;
 
     case 'B':
+        for(int i=0; i<15; i++){
+            indexCount = nullFinder(indexes, col,i);
+            for(j=0; j<100; j++){
+                if (col[j][i]!=0){
+                    colcpy[z]= col[j][i];
+                    z++;
+                }
+            }
 
+            sortValues(colcpy);
+            median = calcMedian(colcpy, z);
+            handleMissingValues(col,i,median);
+            z=0;
+
+        }
         break;
-
-    case 'C':
-        break;
-
     }
 }
 
-int nullFinder(int col[100][100], int colNum){
-    int indexCount = 0;
+int nullFinder(int indexes[100], int col[100][100], int colNum){
+    int indexCount = -1;
 
     for(int i=0; i<100; i++){
         if(col[i][colNum]==0){
             indexCount++;
+            indexes[indexCount] = i;
         }
     }
 
     return indexCount;
 }
 
-void handleMissingValues(int col[100][100], int colNum, int avg){
+void handleMissingValues(int col[100][100], int colNum, int replace){
     for(int i=0; i<100; i++){
         if(col[i][colNum]==0){
-            col[i][colNum] = avg;
+            col[i][colNum] = replace;
     }
 }
 
 }
 
+void sortValues(int col[100]){ 
+    int temp=0;
 
-void calcStDev(int data){
+    for(int i=0 ; i<100 ; i++)
+    {
+        for(int j=0 ; j<100-1 ; j++)
+        {
+            if(col[j]>col[j+1])
+            {
+                temp = col[j];
+                col[j] = col[j+1];
+                col[j+1] = temp;
+            }
+        }
+    }
+}
 
+int calcMedian(int col[100], int n)
+{
+    int median=0;
+
+    if(n%2 == 0)
+        median = (col[(n-1)/2] + col[n/2])/2.0;
+
+    else
+        median = col[n/2];
+    
+    return median;
 }
 
 
-
-int variableType(int data){
-
-}
